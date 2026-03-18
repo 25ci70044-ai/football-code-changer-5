@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Legends ⚽️</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Minimal additions to handle the missing classes from partial game style */
+        .header {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+        }
+        .selection-bar {
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            pointer-events: auto;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px 30px;
+            color: white;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            font-weight: bold;
+            border-radius: 8px;
+            text-transform: uppercase;
+        }
+        .card:hover {
+            background: #238636;
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,255,0,0.2);
+        }
+        .kickoff-btn {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #2ea043, #238636);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            pointer-events: auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+        }
+        .kickoff-btn:hover {
+            transform: translateX(-50%) scale(1.05);
+            background: #2ea043;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui-layer">
+        <a href="/editor" style="position:fixed; top:20px; right:20px; color:rgba(255,255,255,0.5); text-decoration:none; font-family:sans-serif; font-size:0.8rem; border:1px solid rgba(255,255,255,0.2); padding:5px 12px; border-radius:4px; z-index:100; pointer-events:auto;" onmouseover="this.style.color='white'; this.style.borderColor='white';" onmouseout="this.style.color='rgba(255,255,255,0.5)'; this.style.borderColor='rgba(255,255,255,0.2)';">⚙️ Edit Tactics</a>
+        <div class="header">
+            <h1 id="player-name">SELECT YOUR LEGEND</h1>
+            <p id="player-stats">Click a card to view 3D Preview</p>
+        </div>
+
+        <div class="selection-bar">
+            <div class="card" onclick="selectPlayer('Ronaldo')">CR7</div>
+            <div class="card" onclick="selectPlayer('Messi')">MESSI</div>
+            <div class="card" onclick="selectPlayer('Neymar')">NEYMAR</div>
+            <div class="card" onclick="selectPlayer('Ronaldinho')">RONALDINHO</div>
+        </div>
+
+        <button class="kickoff-btn" onclick="playGame()">START MATCH</button>
+    </div>
+    <canvas id="game-canvas"></canvas>
+    
+    <script src="main.js"></script>
+</body>
+</html>

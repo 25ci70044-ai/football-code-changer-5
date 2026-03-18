@@ -1,0 +1,47 @@
+body { margin: 0; overflow: hidden; background: #000; font-family: 'Segoe UI', sans-serif; }
+#ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+.menu-content { pointer-events: auto; padding: 50px; color: white; }
+
+.selection-panel {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px;
+}
+
+.player-card {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 20px;
+    width: 120px;
+    text-align: center;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: 0.3s;
+}
+
+.player-card:hover { background: #00ff00; color: black; transform: translateY(-10px); }
+
+#player-name-display {
+    position: absolute;
+    top: 20%;
+    width: 100%;
+    text-align: center;
+    font-size: 3rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+}
+
+#play-now-btn {
+    position: absolute;
+    bottom: 2%;
+    right: 5%;
+    padding: 15px 40px;
+    background: #00ff00;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Game - Web Editor ⚽️</title>
+    <meta name="description" content="Football Gang ERP - Edit your football game files with Maverick AI assistance">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <!-- Load CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="login-screen" class="placeholder" style="z-index: 100; background: var(--header-bg);">
+        <div style="background: var(--sidebar-bg); padding: 40px; border-radius: 12px; border: 1px solid var(--border); width: 350px;">
+            <h2 style="margin-top:0">Football Gang ERP</h2>
+            <input type="text" id="username" placeholder="Username" style="width:100%; margin-bottom:10px; padding:10px; background:#0d1117; border:1px solid var(--border); color:white;">
+            <input type="password" id="password" placeholder="Password" style="width:100%; margin-bottom:20px; padding:10px; background:#0d1117; border:1px solid var(--border); color:white;">
+            <button onclick="login()" class="primary" style="width:100%">Enter Clubhouse</button>
+        </div>
+    </div>
+
+    <header id="main-header" style="display:none;">
+        <div class="title">⚽️ Gang ERP: <span id="user-display"></span></div>
+        <div class="actions">
+            <button onclick="showTab('editor')">Strategy Editor</button>
+            <button onclick="showTab('roster')">Gang Roster</button>
+            <button onclick="runProgram()" class="primary" style="background: #238636; border-color: #2ea043;">Run Program ▶️</button>
+            <button id="btn-save" class="primary" onclick="saveActiveFile()" disabled>Save Tactics</button>
+            <button onclick="downloadAllFiles()" style="background:transparent; border:1px solid var(--border); color:var(--text);">💾 Download All</button>
+            <button id="btn-maverick" onclick="toggleMaverickAI()" class="maverick-btn">🤖 Maverick AI</button>
+            <button onclick="logout()" class="logout">Logout</button>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="sidebar-title">Project Files</div>
+            <ul id="file-list" class="file-list">
+                <!-- Files rendered by script.js renderFileList() -->
+            </ul>
+        </aside>
+
+        <main class="editor-container">
+            <div class="editor-tabs" id="editor-tabs" style="display: none;">
+                <div class="tab" id="active-tab-title">
+                    <svg class="icon" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M2 1.75C2 .784 2.784 0 3.75 0h6.586c.464 0 .909.184 1.237.513l2.914 2.914c.329.328.513.773.513 1.237v9.586A1.75 1.75 0 0113.25 16h-9.5A1.75 1.75 0 012 14.25V1.75zm1.75-.25a.25.25 0 00-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 00.25-.25V4.664a.25.25 0 00-.073-.177l-2.914-2.914a.25.25 0 00-.177-.073H3.75z"></path></svg>
+                    <span>filename.js</span>
+                </div>
+            </div>
+            
+            <div id="monaco-editor"></div>
+            
+            <div id="editor-placeholder" class="placeholder">
+                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.5;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                <p>Select a file from the sidebar to start editing</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Maverick AI Panel -->
+    <div id="maverick-panel" class="maverick-panel">
+        <div class="maverick-header">
+            <div class="maverick-title">
+                <div class="maverick-logo">M</div>
+                <div>
+                    <div style="font-weight:800; font-size:1rem;">Maverick AI</div>
+                    <div style="font-size:0.72rem; color:#a78bfa; font-weight:500;">Powered by Google Gemini · Free Tier</div>
+                </div>
+            </div>
+            <button onclick="toggleMaverickAI()" style="background:transparent;border:none;color:#8b949e;font-size:1.3rem;cursor:pointer;padding:4px 8px;" title="Close">&times;</button>
+        </div>
+
+        <div class="maverick-context-bar" id="maverick-context-bar">
+            <span id="maverick-file-label">📄 No file open — open a file to enable AI editing</span>
+        </div>
+
+        <div class="maverick-messages" id="maverick-messages">
+            <div class="maverick-msg ai">
+                <div class="maverick-avatar">M</div>
+                <div class="maverick-bubble">
+                    Hey! I'm <strong>Maverick AI</strong> 🤖⚽<br><br>
+                    Open any file in the editor, then tell me what you'd like to change — I'll rewrite the code for you!
+                    <br><br>
+                    <span style="color:#a78bfa; font-size:0.82rem;">Example: "Make the player cards glow on hover" or "Add a dark theme toggle"</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="maverick-input-area">
+            <textarea id="maverick-input" class="maverick-textarea" placeholder="Describe the change you want... (e.g. 'Add a scoreboard to the game')" rows="3"></textarea>
+            <div class="maverick-actions">
+                <span id="maverick-status" style="font-size:0.78rem; color:#8b949e;"></span>
+                <button id="maverick-send-btn" onclick="sendToMaverick()" class="primary" style="background: linear-gradient(135deg,#7c3aed,#5b21b6); border:none; padding:8px 20px;">✨ Ask AI</button>
+            </div>
+        </div>
+    </div>
+    <div id="maverick-overlay" class="maverick-overlay" onclick="toggleMaverickAI()"></div>
+
+    <!-- Apply Changes Modal -->
+    <div id="apply-modal" class="apply-modal" style="display:none;">
+        <div class="apply-modal-content">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <strong style="font-size:1rem;">🤖 Maverick Suggestion</strong>
+                <button onclick="closeApplyModal()" style="background:transparent;border:none;color:#8b949e;font-size:1.2rem;cursor:pointer;">&times;</button>
+            </div>
+            <div style="font-size:0.85rem; color:#8b949e; margin-bottom:12px;" id="apply-modal-desc"></div>
+            <pre id="apply-modal-preview" class="apply-preview"></pre>
+            <div style="display:flex; gap:10px; margin-top:16px;">
+                <button onclick="applyMaverickChanges()" class="primary" style="flex:1; background:linear-gradient(135deg,#7c3aed,#5b21b6); border:none;">✅ Apply to Editor</button>
+                <button onclick="closeApplyModal()" style="flex:1;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Action successful!</div>
+
+    <!-- Monaco Editor Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
+    
+    <!-- Load custom JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
